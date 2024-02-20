@@ -1,11 +1,33 @@
-# Start your own "Can of Books" App
+# Can Of Books
 
-This repository has starter code to begin work on creating your own online bookshelf.
+**Author**: Isai Chaidez
+**Version**: 1.0
 
-## What can books do?
+## Overview
+Web application to track the many books that have influenced me.
 
-Books are life-changing. They have the power to enlighten, educate, entertain, heal, and help us grow. Build out this code base to create an web app to track what books have impacted you, and what's recommended to read next.
+## Architecture
 
-## Use this template
+* JavaScript
+* HTML
+* CSS
+* React
+* Express
+* MongoDB
 
-Clone this repo to your own account with the green "Use this template" button. Then, add any collaborators. Now you are ready to start adding features! Deploy your site to let the world know which books have had the greatest impact on you, and what's recommended. Enjoy!
+## Change Log
+<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
+
+01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+
+## Estimates
+
+Book Component: As a user, I'd like to see the list of books, so that I can see what's recommended to me.
+
+Estimate of time needed to complete: 2 hours
+
+Start time: 10:38am
+
+Finish time: 12:04pm
+
+Actual time needed to complete: ~1:30
