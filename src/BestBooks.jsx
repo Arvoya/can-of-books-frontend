@@ -13,7 +13,7 @@ class BestBooks extends React.Component {
 
 
 componentDidMount() {
-  axios.get(`http://localhost:3001/books`)
+  axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
   .then(response => {
     console.log(response.data)
     this.setState({
