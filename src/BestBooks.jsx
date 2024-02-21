@@ -13,13 +13,18 @@ class BestBooks extends React.Component {
 
 
 componentDidMount() {
+    this.connectToServer();
+}
+
+
+connectToServer = () => {
   axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
   .then(response => {
-    console.log(response.data)
     this.setState({
       books: response.data
     })
   })
+
 }
 
 
