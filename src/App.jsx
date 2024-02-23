@@ -3,6 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About.jsx';
+import BookFormModal from "./BookFormModal.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -24,9 +25,14 @@ class App extends React.Component {
             <p>ABOUT</p>
           </Link>
           <Routes>
-            <Route 
+            <Route
               exact path="/"
-              element={<BestBooks />}
+              element={
+              <>
+              <BookFormModal/>
+              <BestBooks />
+              </>
+              }
             >
             </Route>
             <Route

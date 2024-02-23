@@ -18,7 +18,8 @@ componentDidMount() {
 
 
 connectToServer = () => {
-  axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
+  // axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
+  axios.get('http://localhost:3001/books')
   .then(response => {
     this.setState({
       books: response.data
