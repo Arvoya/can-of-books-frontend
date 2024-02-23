@@ -19,8 +19,7 @@ componentDidMount() {
 
 
 connectToServer = () => {
-  // axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
-  axios.get('http://localhost:3001/books')
+  axios.get(`https://can-of-books-backend-u3kg.onrender.com/books`)
   .then(response => {
     this.setState({
       books: response.data
@@ -30,7 +29,7 @@ connectToServer = () => {
 
 onDelete = (book) => {
     const id = book.target.id;
-    axios.delete(`http://localhost:3001/books/${id}`)
+    axios.delete(`https://can-of-books-backend-u3kg.onrender.com/books/${id}`)
     .then(() => {
       const updatedBooks = this.state.books.filter(book => book._id !== id);
       this.setState({ books: updatedBooks });
