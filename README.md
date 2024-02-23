@@ -31,3 +31,27 @@ Start time: 10:38am
 Finish time: 12:04pm
 
 Actual time needed to complete: ~1:30
+
+--- 
+
+Create: As a user, I'd like to add a new book to the shelf, so that I can update the list with my own recommendations.
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 2:33pm
+
+Finish time: 4:34pm
+
+Actual time needed to complete: 2 hours
+
+---
+
+Delete: As a user, I want to remove books from my list, so that only the most important books are on my shelf.
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 5:00pm
+
+Finish time: 5:40pm
+
+Actual time needed to complete: 40 minutes
