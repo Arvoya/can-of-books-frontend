@@ -44,3 +44,14 @@ Finish time: 4:34pm
 
 Actual time needed to complete: 2 hours
 
+---
+
+Delete: As a user, I want to remove books from my list, so that only the most important books are on my shelf.
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 5:00pm
+
+Finish time: 5:40pm
+
+Actual time needed to complete: 40 minutes

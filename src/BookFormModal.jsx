@@ -26,7 +26,7 @@ function BookFormModal() {
 	// Handle form submission
 	const handleSubmit = async () => {
 		try {
-			const response = await axios.post('http://localhost:3001/books', formData);
+			await axios.post('http://localhost:3001/books', formData);
 			handleClose();
 		} catch (error) {
 			console.error('There was an error submitting the form:', error);

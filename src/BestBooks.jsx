@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
+import Button from "react-bootstrap/Button";
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -25,7 +26,18 @@ connectToServer = () => {
       books: response.data
     })
   })
+}
 
+onDelete = (book) => {
+    const id = book.target.id;
+    axios.delete(`http://localhost:3001/books/${id}`)
+    .then(() => {
+      const updatedBooks = this.state.books.filter(book => book._id !== id);
+      this.setState({ books: updatedBooks });
+    })
+    .catch(error => {
+      console.error('There was an error deleting the book:', error);
+    });
 }
 
 
@@ -42,6 +54,18 @@ connectToServer = () => {
                     <Carousel.Item key={id} interval={5000}>
                         <h3>{element.title}</h3>
                         <p>{element.description}</p>
+                        <p>Status: {element.status}</p>
+                      <Button
+                           id={element._id}
+                           size='sm'
+                           style={{
+                             display: 'block',
+                             margin: '40px auto',
+                             width: 'fit-content'
+                           }}
+                           onClick={this.onDelete}>
+                        Delete Me
+                      </Button>
                     </Carousel.Item>
                ))}
              </Carousel>
