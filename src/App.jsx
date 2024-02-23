@@ -13,37 +13,51 @@ import {
 } from "react-router-dom";
 
 class App extends React.Component {
+  state = {
+    books: []
+  };
+
+  addBook = (book) => {
+    this.setState(prevState => ({
+      books: [...prevState.books, book]
+    }));
+  }
+
+  updateBooks = (books) => {
+    this.setState({ books });
+  }
+
   render() {
     return (
-      <>
-        <Router>
-          <Header />
-          <Link to="/">
-            <p>HOME</p>
-          </Link>
-          <Link to="/about">
-            <p>ABOUT</p>
-          </Link>
-          <Routes>
-            <Route
-              exact path="/"
-              element={
-              <>
-              <BookFormModal/>
-              <BestBooks />
-              </>
-              }
-            >
-            </Route>
-            <Route
-              exact path="/about"
-              element={<About />}
-            >
-            </Route>
-          </Routes>
-          <Footer />
-        </Router>
-      </>
+         <>
+           <Router>
+             <Header />
+             <Link to="/">
+               <p>HOME</p>
+             </Link>
+             <Link to="/about">
+               <p>ABOUT</p>
+             </Link>
+             <Routes>
+               <Route
+                    exact path="/"
+                    element={
+                      <>
+                        <BookFormModal addBook={this.addBook}/>
+                        <BestBooks books={this.state.books} updateBooks={this.updateBooks} />
+                      </>
+                    }
+               >
+               </Route>
+               <Route
+                    exact path="/about"
+                    element={<About />}
+               >
+               </Route>
+             </Routes>
+             <Footer />
+           </Router>
+         </>
     )
   }
 }

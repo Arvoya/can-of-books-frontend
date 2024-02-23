@@ -4,14 +4,13 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios'; // Import Axios
 
-function BookFormModal() {
+function BookFormModal(props) {
 	const [show, setShow] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
 		status: '',
 	});
-
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
@@ -23,16 +22,19 @@ function BookFormModal() {
 		}));
 	};
 
-	// Handle form submission
-	const handleSubmit = async () => {
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
 		try {
-			await axios.post('https://can-of-books-backend-u3kg.onrender.com/books', formData);
+			console.log('Submitting form with data:', formData);
+
+			const response = await axios.post('https://can-of-books-backend-u3kg.onrender.com/books', formData);
+			props.addBook(response.data);
 			handleClose();
 		} catch (error) {
 			console.error('There was an error submitting the form:', error);
 		}
 	};
-
 	return (
 		<>
 			<Button variant="primary" onClick={handleShow}>
