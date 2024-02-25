@@ -23,8 +23,16 @@ class App extends React.Component {
     }));
   }
 
-  updateBooks = (books) => {
-    this.setState({ books });
+  updateBook = (updatedBook) => {
+    this.setState(prevState => ({
+      books: prevState.books.map(book =>
+           book._id === updatedBook._id ? updatedBook : book
+      )
+    }));
+  };
+
+  updateBooks = (newBooks) => {
+    this.setState({books: newBooks});
   }
 
   render() {
@@ -44,7 +52,7 @@ class App extends React.Component {
                     element={
                       <>
                         <BookFormModal addBook={this.addBook}/>
-                        <BestBooks books={this.state.books} updateBooks={this.updateBooks} />
+                        <BestBooks books={this.state.books} updateBooks={this.updateBooks} updateBook={this.updateBook}/>
                       </>
                     }
                >

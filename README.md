@@ -55,3 +55,13 @@ Start time: 5:00pm
 Finish time: 5:40pm
 
 Actual time needed to complete: 40 minutes
+
+---
+
+Update: As a user, I want to update book details on my lst, so that I can change the book status, or update the book details as I learn more about it.
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 4:03pm - 4:40 38 min | 5:32pm - 6:36pm
+
+Actual time needed to complete: 1 hour 44 min
