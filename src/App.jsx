@@ -3,7 +3,6 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About.jsx';
-import BookFormModal from "./BookFormModal.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -13,28 +12,6 @@ import {
 } from "react-router-dom";
 
 class App extends React.Component {
-  state = {
-    books: []
-  };
-
-  addBook = (book) => {
-    this.setState(prevState => ({
-      books: [...prevState.books, book]
-    }));
-  }
-
-  updateBook = (updatedBook) => {
-    this.setState(prevState => ({
-      books: prevState.books.map(book =>
-           book._id === updatedBook._id ? updatedBook : book
-      )
-    }));
-  };
-
-  updateBooks = (newBooks) => {
-    this.setState({books: newBooks});
-  }
-
   render() {
     return (
          <>
@@ -49,12 +26,7 @@ class App extends React.Component {
              <Routes>
                <Route
                     exact path="/"
-                    element={
-                      <>
-                        <BookFormModal addBook={this.addBook}/>
-                        <BestBooks books={this.state.books} updateBooks={this.updateBooks} updateBook={this.updateBook}/>
-                      </>
-                    }
+                    element={<BestBooks />}
                >
                </Route>
                <Route

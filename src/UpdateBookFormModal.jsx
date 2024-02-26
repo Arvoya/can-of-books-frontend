@@ -2,9 +2,6 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
-
-const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
 
 class UpdateBookFormModal extends React.Component {
 	state = {
@@ -28,13 +25,8 @@ class UpdateBookFormModal extends React.Component {
 
 	handleSubmit = (event) => {
 		event.preventDefault();
-		axios.put(`${backendURL}/${this.state.book._id}`, this.state.book)
-		.then(() => {
+		this.setState({ book: this.state.book }, () => {
 			this.props.updateBook(this.state.book);
-			this.props.onHide();
-		})
-		.catch(error => {
-			console.error('There was an error updating the book:', error);
 		});
 	};
 
