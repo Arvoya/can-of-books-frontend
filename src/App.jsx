@@ -3,58 +3,27 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import About from './About.jsx';
-import BookFormModal from "./BookFormModal.jsx";
+import Welcome from './Welcome.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { withAuth0 } from "@auth0/auth0-react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from "react-router-dom";
+import Profile from "./Profile.jsx";
 
 class App extends React.Component {
-  state = {
-    books: []
-  };
-
-  addBook = (book) => {
-    this.setState(prevState => ({
-      books: [...prevState.books, book]
-    }));
-  }
-
-  updateBook = (updatedBook) => {
-    this.setState(prevState => ({
-      books: prevState.books.map(book =>
-           book._id === updatedBook._id ? updatedBook : book
-      )
-    }));
-  };
-
-  updateBooks = (newBooks) => {
-    this.setState({books: newBooks});
-  }
-
   render() {
+    const { isAuthenticated } = this.props.auth0;
     return (
          <>
            <Router>
              <Header />
-             <Link to="/">
-               <p>HOME</p>
-             </Link>
-             <Link to="/about">
-               <p>ABOUT</p>
-             </Link>
              <Routes>
                <Route
                     exact path="/"
-                    element={
-                      <>
-                        <BookFormModal addBook={this.addBook}/>
-                        <BestBooks books={this.state.books} updateBooks={this.updateBooks} updateBook={this.updateBook}/>
-                      </>
-                    }
+                    element={isAuthenticated ?<BestBooks/> : <Welcome/>}
                >
                </Route>
                <Route
@@ -62,6 +31,14 @@ class App extends React.Component {
                     element={<About />}
                >
                </Route>
+             {isAuthenticated &&
+             <Route
+                  exact path ='/profile'
+                  element={<Profile/>}
+             >
+
+             </Route>
+             }
              </Routes>
              <Footer />
            </Router>
@@ -70,4 +47,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuth0(App);

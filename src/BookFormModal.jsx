@@ -1,18 +1,14 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios'; // Import Axios
 
 function BookFormModal(props) {
-	const [show, setShow] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
 		status: '',
 	});
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -22,26 +18,14 @@ function BookFormModal(props) {
 		}));
 	};
 
-	const handleSubmit = async (event) => {
+	const handleSubmit = (event) => {
 		event.preventDefault();
-
-		try {
-			console.log('Submitting form with data:', formData);
-
-			const response = await axios.post('https://can-of-books-backend-u3kg.onrender.com/books', formData);
-			props.addBook(response.data);
-			handleClose();
-		} catch (error) {
-			console.error('There was an error submitting the form:', error);
-		}
+		props.addBook(formData);
+		props.onHide();
 	};
 	return (
 		<>
-			<Button variant="primary" onClick={handleShow}>
-				Add Book
-			</Button>
-
-			<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+			<Modal show={props.show} onHide={props.onHide} backdrop="static" keyboard={false}>
 				<Modal.Header closeButton>
 					<Modal.Title>Add A Book</Modal.Title>
 				</Modal.Header>
@@ -103,9 +87,6 @@ function BookFormModal(props) {
 								/>
 							</div>
 						</Form.Group>
-						<Button variant="secondary" onClick={handleClose}>
-							Close
-						</Button>
 						<Button variant="primary" type="submit">
 							Submit
 						</Button>

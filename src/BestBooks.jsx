@@ -2,63 +2,125 @@ import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import Button from "react-bootstrap/Button";
+import { withAuth0} from "@auth0/auth0-react";
+import Toast from 'react-bootstrap/Toast';
 import UpdateBookFormModal from "./UpdateBookFormModal.jsx";
+import BookFormModal from "./BookFormModal.jsx";
 
 const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
 
 class BestBooks extends React.Component {
-
-     constructor() {
-          super();
+     constructor(props) {
+          super(props);
           this.state = {
+               books: [],
                showUpdateModal: false,
-               bookToUpdate: null
-          }
+               showAddModal: false,
+               bookToUpdate: null,
+               isLoading: false,
+               showToast: false
+          };
      }
 
      componentDidMount() {
           this.connectToServer();
      }
 
-     connectToServer = () => {
-          axios.get(backendURL)
-          .then(response => {
-               this.props.updateBooks(response.data);
-          })
-          .catch(error => {
+     getToken = () => {
+          return this.props.auth0.getIdTokenClaims()
+          .then(res => res.__raw)
+          .catch(err => console.err(err))
+     }
+
+     connectToServer = async () => {
+          const token = await this.getToken();
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               const response = await axios.get(backendURL, config);
+               this.setState({ books: response.data });
+          } catch (error) {
                console.error('There was an error connecting to the server:', error);
-          });
+          }
      }
 
-     onDelete = (book) => {
-          const id = book.target.id;
-          axios.delete(`${backendURL}/${id}`)
-          .then(() => {
-               const updatedBooks = this.props.books.filter(book => book._id !== id);
-               this.props.updateBooks(updatedBooks);
-          })
-          .catch(error => {
+     addBook = async (newBook) => {
+          const token = await this.getToken();
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               await axios.post(`${backendURL}`, newBook, config);
+               this.connectToServer();
+          } catch (error) {
+               console.error('There was an error adding the book:', error);
+          }
+     }
+
+     onDelete = async (book) => {
+          const token = await this.getToken();
+          const id = book._id;
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               await axios.delete(`${backendURL}/${id}`, config);
+               const updatedBooks = this.state.books.filter(book => book._id !== id);
+               this.setState({ books: updatedBooks });
+          } catch (error) {
                console.error('There was an error deleting the book:', error);
-          });
+          }
      }
 
-     onUpdate = (newBook) => {
-          const id = newBook.target.id;
+     onUpdate = async (updatedBook) => {
+          const token = await this.getToken();
+          const id = updatedBook._id;
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
 
-          axios.update(`${backendURL}/${id}`)
-          .then(() => {
-               this.connectToServer()
-          }).catch(error => {
+          this.setState({ isLoading: true });
+
+          try {
+               await axios.put(`${backendURL}/${id}`, updatedBook, config);
+               this.connectToServer();
+               this.setState({ showToast: true });
+          } catch (error) {
                console.error('There was an error updating the book:', error);
-          });
+          } finally {
+               this.setState({ isLoading: false });
+          }
+     };
+
+     handleAddModalOpen = () => {
+          this.setState({ showAddModal: true});
      }
+
+     handleAddModalClose = () => {
+          this.setState({ showAddModal: false});
+     }
+
+
+     handleUpdateSubmit = (book) => {
+          this.onUpdate(book);
+          this.setState({ showUpdateModal: false, bookToUpdate: null }, this.connectToServer);
+     };
 
      handleUpdateClick = (book) => {
           this.setState({
                showUpdateModal: true,
                bookToUpdate: book
-          })
-     }
+          });
+     };
 
      handleUpdateModalClose = () => {
           this.setState({
@@ -68,11 +130,18 @@ class BestBooks extends React.Component {
      }
 
      render() {
-          const { books } = this.props;
+          const { books, isLoading, showToast } = this.state;
 
+          if (isLoading){
+               return<p>Loading...</p>
+          }
           return (
                <>
                     <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
+
+                    <Button variant='primary' onClick={this.handleAddModalOpen}>
+                         Add Book
+                    </Button>
 
                     {books.length > 0 ? (
                          <Carousel>
@@ -89,7 +158,7 @@ class BestBooks extends React.Component {
                                                   margin: '40px auto',
                                                   width: 'fit-content'
                                              }}
-                                             onClick={this.onDelete}>
+                                             onClick={() => this.onDelete(element)}>
                                              Delete Me
                                         </Button>
                                         <Button
@@ -116,12 +185,24 @@ class BestBooks extends React.Component {
                               show={this.state.showUpdateModal}
                               onHide={this.handleUpdateModalClose}
                               book={this.state.bookToUpdate}
-                              updateBook={this.props.updateBook}
+                              updateBook={this.handleUpdateSubmit}
                          />
                     )}
+                    <BookFormModal
+                         show={this.state.showAddModal}
+                         onHide={this.handleAddModalClose}
+                         addBook={this.addBook}
+                    />
+
+                    <Toast onClose={() => this.setState({ showToast: false })} show={showToast} delay={3000} autohide>
+                         <Toast.Header>
+                              <strong className="mr-auto">Book Update</strong>
+                         </Toast.Header>
+                         <Toast.Body>Book updated successfully!</Toast.Body>
+                    </Toast>
                </>
           )
      }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
