@@ -1,8 +1,8 @@
-// BestBooks.jsx
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import Button from "react-bootstrap/Button";
+import { withAuth0} from "@auth0/auth0-react";
 import Toast from 'react-bootstrap/Toast';
 import UpdateBookFormModal from "./UpdateBookFormModal.jsx";
 import BookFormModal from "./BookFormModal.jsx";
@@ -26,53 +26,79 @@ class BestBooks extends React.Component {
           this.connectToServer();
      }
 
-     connectToServer = () => {
-          axios.get(backendURL)
-          .then(response => {
+     getToken = () => {
+          return this.props.auth0.getIdTokenClaims()
+          .then(res => res.__raw)
+          .catch(err => console.err(err))
+     }
+
+     connectToServer = async () => {
+          const token = await this.getToken();
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               const response = await axios.get(backendURL, config);
                this.setState({ books: response.data });
-          })
-          .catch(error => {
+          } catch (error) {
                console.error('There was an error connecting to the server:', error);
-          });
+          }
      }
 
-     addBook = (newBook) => {
-          axios.post(`${backendURL}`, newBook)
-          .then(() => {
-               this.connectToServer()
-          }).catch(error => {
+     addBook = async (newBook) => {
+          const token = await this.getToken();
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               await axios.post(`${backendURL}`, newBook, config);
+               this.connectToServer();
+          } catch (error) {
                console.error('There was an error adding the book:', error);
-          });
+          }
      }
 
-     onDelete = (book) => {
+     onDelete = async (book) => {
+          const token = await this.getToken();
           const id = book._id;
-          axios.delete(`${backendURL}/${id}`)
-          .then(() => {
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
+          try {
+               await axios.delete(`${backendURL}/${id}`, config);
                const updatedBooks = this.state.books.filter(book => book._id !== id);
                this.setState({ books: updatedBooks });
-          })
-          .catch(error => {
+          } catch (error) {
                console.error('There was an error deleting the book:', error);
-          });
+          }
      }
 
-     onUpdate = (updatedBook) => {
+     onUpdate = async (updatedBook) => {
+          const token = await this.getToken();
           const id = updatedBook._id;
+          const config = {
+               headers: {
+                    Authorization: `Bearer ${token}`,
+               },
+          };
 
           this.setState({ isLoading: true });
 
-          axios.put(`${backendURL}/${id}`, updatedBook)
-          .then(() => {
+          try {
+               await axios.put(`${backendURL}/${id}`, updatedBook, config);
                this.connectToServer();
                this.setState({ showToast: true });
-          })
-          .catch(error => {
+          } catch (error) {
                console.error('There was an error updating the book:', error);
-          })
-          .finally(() => {
+          } finally {
                this.setState({ isLoading: false });
-          });
+          }
      };
 
      handleAddModalOpen = () => {
@@ -179,4 +205,4 @@ class BestBooks extends React.Component {
      }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
